@@ -1,11 +1,13 @@
 /**
- * Created by xiaoze on 2017/12/5.
+ * Created by chuwk on 2018/10/20.
  */
 // sql语句
 var sqlMap = {
-  // 用户
-  user: {
-    add: 'insert into user(id, name, age) values (0, ?, ?)'
-  }
+    // 用户
+    user: {
+        get: 'select * from users',
+        add: 'insert into users(id, name, sex) values (?, ?, ?)'
+    }
 }
+
 module.exports = sqlMap

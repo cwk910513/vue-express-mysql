@@ -7,12 +7,20 @@ const path = require('path')
 module.exports = {
   dev: {
 
-    // Paths
+    // 静态资源文件夹
     assetsSubDirectory: 'static',
+    // 发布路径
     assetsPublicPath: '/',
+    // 配置代理表，在这里可以配置特定的请求代理到对象的api接口
+    // 例如将'localhost:8080/api/xxx'代理到'www.example.com/api/xxx'
+    // 使用方法：https://vuejs-templates.github.io/webpack/proxy.html
     proxyTable: {
       '/api': {
+        // 接口域名
         target: 'http://127.0.0.1:3000/api/',
+        // 如果是https接口，需要配置这个参数
+        // secure: false,
+        // 如果接口跨域，需要进行这个参数配置
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
@@ -20,8 +28,8 @@ module.exports = {
       }
     },
 
-    // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    // 本地访问 http://localhost:8080
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
