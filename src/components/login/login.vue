@@ -30,57 +30,126 @@
                         </template>
                         <span class='forget' @click='forgetPwdFun'>忘记密码？</span>
                     </a-tooltip>
-                    <a-tooltip placement="top">
-                        <template slot="title">
-                            功能暂未开放，如有疑问请联系管理员：chuwk@xxx.com！
-                        </template>
-                        <span class='register' @click='registerFun'>注册用户</span>
-                    </a-tooltip>
+                    <span class='register' @click='registerFun'>注册用户</span>
                 </div>
                 <div class="bottom-info">
                     Copyright<i class="anticon anticon-copyright"></i> 2018 chuwk 工作室出品 
                 </div>
             </a-col>
             <a-col :xs="3" :sm="6" :md="8" :lg="8" :xl="9" :xxl="10"></a-col>
-        </a-row>        
+        </a-row>
+        <a-modal
+            title           ='注册用户'
+            :visible        ='regeristerModel'
+            :confirmLoading ='okBtnLoading'
+            @ok             ='handleOk'
+            okText          ='注册'
+            @cancel         ='handleCancel'
+            cancelText      ='取消'
+        >
+            <a-form :autoFormCreate="(form)=>{this.form = form}">
+                <a-form-item
+                    label='用户名'
+                    :labelCol="{ span: 5 }"
+                    :wrapperCol="{ span: 16 }"
+                    fieldDecoratorId="regUser"
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空' }]}"
+                    :max='6'
+                >
+                    <a-input placeholder="请输入用户名..."/>
+                </a-form-item>
+                <a-form-item
+                    label='密码'
+                    :labelCol="{ span: 5 }"
+                    :wrapperCol="{ span: 16 }"
+                    fieldDecoratorId="regPwd"
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '密码不能为空' }]}"
+                >
+                    <a-input type='password' placeholder="请输入密码..."/>
+                </a-form-item>
+            </a-form>
+        </a-modal>
     </div>
 </template>
 
 <script>
-  export default {
-    data () {
-        return {
-            user: '',
-            pwd : ''
-        }
-    },
-    methods: {
-        // 登录
-        loginFun() {
-            let self = this;
-            if(!self.user) {
-                this.$message.warning('用户名不能为空，请输入！');
-                return false;
-            }
-            if(!self.pwd) {
-                this.$message.warning('密码不能为空，请输入！');
-                return false;
-            }
-            console.log(self.user);
-            console.log(self.pwd);
-            // 跳转到工作台页面
-            self.$router.push({ path: '/dashboard' });
-        },
-        // 忘记密码
-        forgetPwdFun() {
-            let self = this;
+    import ActionUrl from '../../assets/js/data/action.url.js';
 
+    export default {
+        data () {
+            return {
+                user           : '',     // 登录用户名
+                pwd            : '',     // 登录密码
+                regUser        : '',     // 注册用户名
+                regPwd         : '',     // 注册密码
+                regeristerModel: false,  // 显示注册modal
+                okBtnLoading   : false   // modal确定按钮loading
+            }
         },
-        // 注册用户
-        registerFun() {
-            let self = this;
+        methods: {
+            // 登录
+            loginFun() {
+                let self = this;
+                if(!self.user) {
+                    self.$message.warning('用户名不能为空，请输入！');
+                    return false;
+                }
+                if(!self.pwd) {
+                    self.$message.warning('密码不能为空，请输入！');
+                    return false;
+                }
+                self.$http.post(ActionUrl.login.query.url, {
+                    username: self.user,
+                    password: self.pwd
+                }).then( (response) => {
+                    if(response.body.code === 'success') {
+                        self.$message.success('登录成功！');
+                        sessionStorage.setItem('loginAuth', response.body.message);
+                        // 跳转到工作台页面
+                        self.$router.push({ path: '/dashboard' });
+                    } else {
+                        self.$message.warning('登录失败，请输入正确的用户名和密码！');
+                    }
+                });
+            },
+            // 忘记密码
+            forgetPwdFun() {
+                let self = this;
 
+            },
+            // 显示注册用户modal
+            registerFun() {
+                let self = this;
+                self.regeristerModel = true;
+            },
+            // modal确定
+            handleOk() {
+                let self = this;
+                self.form.validateFields(
+                    (err, values) => {
+                        if (!err) {
+                            self.okBtnLoading = true;
+                            self.$http.post(ActionUrl.login.register.url, {
+                                username: values.regUser,
+                                password: values.regPwd
+                            }).then( (response) => {
+                                if(response.body.code === 'success') {
+                                    self.$message.success(response.body.message);
+                                    self.regeristerModel = false;
+                                    self.okBtnLoading = false;
+                                } else {
+                                    self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
+                                }
+                            })
+                        }
+                    },
+                )
+            },
+            // modal取消
+            handleCancel() {
+                let self = this;
+                self.regeristerModel = false;
+            }
         }
     }
-  }
 </script>

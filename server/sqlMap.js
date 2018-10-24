@@ -4,6 +4,10 @@
 // sql语句
 var sqlMap = {
     // 用户
+    login(username, password) {
+        return "select * from user where user.username = '"+ username +"' and user.password = '"+ password +"'";
+    },
+    register: 'insert into user(username, password) values (?, ?)',
     user: {
         get: 'select * from users',
         add: 'insert into users(id, name, sex) values (?, ?, ?)'
