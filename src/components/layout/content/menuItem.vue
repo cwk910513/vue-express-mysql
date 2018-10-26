@@ -28,7 +28,7 @@
 export default {
     data() {
         return {
-            defaultSltTypes: ''
+            defaultSltTypes: '',
         }
     },
     beforeMount() {
@@ -38,22 +38,22 @@ export default {
             self.$set(self, 'defaultSltTypes', self.crtItem.type);
             self.$router.push({ path: self.crtItem.path });
         } else {
-            self.defaultItem = { 'type': 'home', 'title': '首页', 'active': true, 'path': '/dashboard/' };
-            sessionStorage.setItem('tabListArray', JSON.stringify( [self.defaultItem] ));
+            self.gotoUrl('home', '首页');
         }
     },
     mounted() {
-        // let self = this;
+        
     },
     methods: {
         gotoUrl(type, title) {
             let self = this;
+            self.path = type === 'home' ? '/dashboard/' : '/dashboard/'+ type; 
             // 设置menu-item选中项
-            self.crtItem = { 'path': '/dashboard/'+ type, 'type': type };
+            self.crtItem = { 'path': self.path, 'type': type };
             sessionStorage.setItem('crtItem', JSON.stringify(self.crtItem));
             // 设置tab数组
             self.getSessionItemList = JSON.parse(sessionStorage.getItem('tabListArray'));
-            self.currentItemInfo = { 'type': type, 'title': title, 'active': true, 'path': '/dashboard/'+ type };
+            self.currentItemInfo = { 'type': type, 'title': title, 'active': true, 'path': self.path };
             if(!self.getSessionItemList) {
                 sessionStorage.setItem('tabListArray', JSON.stringify( [self.currentItemInfo] ));
             } else {
@@ -71,15 +71,15 @@ export default {
             // 切换menu
             self.$set(self, 'defaultSltTypes', type);
             // 路由跳转
-            self.$router.push({ path: '/dashboard/'+ type });
+            self.$router.push({ path: self.path });
             // 调用组件声明的方法
-            self.$emit('changeAcitveTab', '');
+            self.$emit('changeAcitveTab', type);
         },
         // 供父组件切换tab时设置active-menu
         setAcitveMenu(type) {
             let self = this;
             self.$set(self, 'defaultSltTypes', type);
-            sessionStorage.setItem('crtItem', JSON.stringify({ 'path': '/dashboard/'+ type, 'type': type }));
+            sessionStorage.setItem('crtItem', JSON.stringify({ 'path': self.path, 'type': type }));
         }
     }
 }

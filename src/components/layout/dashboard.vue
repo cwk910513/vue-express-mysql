@@ -39,13 +39,13 @@ export default {
     data () {
         return {
             collapsed: false,
-            tabArray: '',      // tab列表
+            tabArray: [{ 'type': 'home', 'title': '首页', 'active': true, 'path': '/dashboard/' }],      // tab列表
             activeTab: '',     // 激活的tab
         }
     },
     beforeMount() {
         let self = this;
-        self.setActiveTab();
+        self.setActiveTab('home');
     },
     methods: {
         // 设置左侧menu是否显示
@@ -54,18 +54,18 @@ export default {
             self.collapsed = collapsed;
         },
         // 设置激活tab
-        setActiveTab() {
+        setActiveTab(type) {
             let self = this;
             self.tabArray = JSON.parse(sessionStorage.getItem('tabListArray'));
             if(self.tabArray) {
-                self.activeItem = self.tabArray.filter( tab => { if(tab.active) { return tab } });
+                self.activeItem = self.tabArray.filter( tab => { if(tab.type == type) { return tab } });
                 self.$set(self, 'activeTab', self.activeItem[0].type);
             }
         },
         // 提供给外部组件调用，用于实施设置激活tab项
-        changeActiveTabFun() {
+        changeActiveTabFun(type) {
             let self = this;
-            self.setActiveTab();
+            self.setActiveTab(type);
         },
         // 切换tab时触发事件，点击当前tab不会触发此方法
         changeTab(activeType) {
