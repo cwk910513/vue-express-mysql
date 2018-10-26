@@ -73,7 +73,7 @@
 </template>
 
 <script>
-    import ActionUrl from '../../assets/js/data/action.url.js';
+    import ActionUrl from '../../assets/js/action.url.js';
 
     export default {
         data () {

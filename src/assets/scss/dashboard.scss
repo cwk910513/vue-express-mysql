@@ -16,4 +16,16 @@
         background: #fff;
         min-height: 280px;
     }
+    .tabs-div {
+        width: 100%;
+        .tabs-content {
+            margin: 15px;
+            background-color: white;
+            .tab-item {
+                padding-left: 15px;
+                padding-right: 15px;
+                padding-bottom: 15px;
+            }
+        }
+    }
 }

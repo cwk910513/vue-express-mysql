@@ -3,13 +3,13 @@
 </style>
 
 <template>
-    <a-menu theme="dark" :defaultSelectedKeys="['1']" mode="inline">
-        <a-menu-item key="1">
+    <a-menu theme="dark" :selectedKeys="[defaultSltTypes]" mode="inline">
+        <a-menu-item key="info" @click="gotoUrl('info', '个人中心')">
             <a-icon type="user" />
             <span>个人中心</span>
         </a-menu-item>
-        <a-menu-item key="2">
-            <a-icon type="desktop" />
+        <a-menu-item key="user" @click="gotoUrl('user', '用户管理')">
+            <a-icon type="desktop"/>
             <span>用户管理</span>
         </a-menu-item>
         <a-sub-menu key="sub1">
@@ -28,8 +28,59 @@
 export default {
     data() {
         return {
-            
+            defaultSltTypes: ''
         }
     },
+    beforeMount() {
+        let self = this;
+        self.crtItem = JSON.parse(sessionStorage.getItem('crtItem'));
+        if(self.crtItem) {
+            self.$set(self, 'defaultSltTypes', self.crtItem.type);
+            self.$router.push({ path: self.crtItem.path });
+        } else {
+            self.defaultItem = { 'type': 'home', 'title': '首页', 'active': true, 'path': '/dashboard/' };
+            sessionStorage.setItem('tabListArray', JSON.stringify( [self.defaultItem] ));
+        }
+    },
+    mounted() {
+        // let self = this;
+    },
+    methods: {
+        gotoUrl(type, title) {
+            let self = this;
+            // 设置menu-item选中项
+            self.crtItem = { 'path': '/dashboard/'+ type, 'type': type };
+            sessionStorage.setItem('crtItem', JSON.stringify(self.crtItem));
+            // 设置tab数组
+            self.getSessionItemList = JSON.parse(sessionStorage.getItem('tabListArray'));
+            self.currentItemInfo = { 'type': type, 'title': title, 'active': true, 'path': '/dashboard/'+ type };
+            if(!self.getSessionItemList) {
+                sessionStorage.setItem('tabListArray', JSON.stringify( [self.currentItemInfo] ));
+            } else {
+                self.filterItem = self.getSessionItemList.filter( (item) => { if(item.type == type) { return item } });
+                if(self.filterItem.length) {
+                    self.getSessionItemList.map( item => {
+                        item.active = item.type === type;
+                    })
+                    sessionStorage.setItem('tabListArray', JSON.stringify(self.getSessionItemList));
+                } else {
+                    sessionStorage.setItem('tabListArray', JSON.stringify([...self.getSessionItemList, self.currentItemInfo]));
+                }
+            }
+            
+            // 切换menu
+            self.$set(self, 'defaultSltTypes', type);
+            // 路由跳转
+            self.$router.push({ path: '/dashboard/'+ type });
+            // 调用组件声明的方法
+            self.$emit('changeAcitveTab', '');
+        },
+        // 供父组件切换tab时设置active-menu
+        setAcitveMenu(type) {
+            let self = this;
+            self.$set(self, 'defaultSltTypes', type);
+            sessionStorage.setItem('crtItem', JSON.stringify({ 'path': '/dashboard/'+ type, 'type': type }));
+        }
+    }
 }
 </script>

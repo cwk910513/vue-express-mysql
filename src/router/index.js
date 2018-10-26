@@ -7,6 +7,10 @@ import login from '@/components/login/login';
 import dashboard from '@/components/layout/dashboard';
 // 欢迎首页
 import home from '@/components/home';
+// 个人中心
+import personInfo from '@/components/personInfo';
+// 用户管理
+import userComponent from '@/components/user';
 
 Vue.use(Router)
 
@@ -23,18 +27,35 @@ let router = new Router({
         }, 
         {
             path: '/dashboard',
-            name: 'dashboard',
             title: '工作台',
             component: dashboard,
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard/',
                     name: 'home',
                     title: '欢迎首页',
                     meta: {
                         requireAuth: true,
                     },
                     component: home
+                },
+                {
+                    path: '/dashboard/info',
+                    name: 'info',
+                    title: '个人中心',
+                    meta: {
+                        requireAuth: true,
+                    },
+                    component: personInfo
+                },
+                {
+                    path: '/dashboard/user',
+                    name: 'user',
+                    title: '用户管理',
+                    meta: {
+                        requireAuth: true,
+                    },
+                    component: userComponent
                 }
             ]
         }

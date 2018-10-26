@@ -8,7 +8,7 @@ import * as mutations from './mutations'
 Vue.use(Vuex);
 
 const state = {
-    layoutCollapsed: false
+    currentItemKey: ''
 };
 
 const store = new Vuex.Store({
