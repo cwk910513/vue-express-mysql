@@ -8,6 +8,9 @@ var sqlMap = {
         return "select * from user where user.username = '"+ username +"' and user.password = '"+ password +"'";
     },
     register: 'insert into user(username, password) values (?, ?)',
+    update(username, password) {
+        return "update user set user.password = '"+ password +"' where user.username = '"+ username +"'";
+    },
     user: {
         get: 'select * from users',
         add: 'insert into users(id, name, sex) values (?, ?, ?)'

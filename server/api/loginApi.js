@@ -50,4 +50,16 @@ router.post('/register', (req, res) => {
     });
 });
 
+// 更新
+router.post('/update', (req, res) => {
+    var params = req.body;
+    var sql = $sql.update(params.username, params.password);
+    conn.query(sql, function(err, result) {
+        if(err) {
+            res.json({ code: 'error', message: '更新失败' });
+        }
+        res.json({ code: result.changedRows ? 'success' : 'error', message: result.changedRows ? '更新成功' : '更新失败' });
+    })
+})
+
 module.exports = router;
