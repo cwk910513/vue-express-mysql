@@ -15,12 +15,13 @@
         <a-sub-menu key="sub1">
             <span slot="title">
                 <a-icon type="user" />
-                <span>表格管理</span>
+                <span>图表管理</span>
             </span>
             <a-menu-item key="3">柱状图</a-menu-item>
             <a-menu-item key="4">饼状图</a-menu-item>
             <a-menu-item key="5">折线图</a-menu-item>
         </a-sub-menu>
+        
     </a-menu>
 </template>
 

@@ -15,9 +15,7 @@
                     <a-tab-pane class="tab-item"
                                 v-for="tab in tabArray"
                                 :key="tab.type"
-                                :tab="tab.title"
-                                
-                                
+                                :tab="tab.title"   
                     >
                         <router-view />
                     </a-tab-pane>
