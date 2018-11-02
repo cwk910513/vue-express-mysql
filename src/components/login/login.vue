@@ -74,6 +74,7 @@
 
 <script>
     import ActionUrl from '../../assets/js/action.url.js';
+    import http from '../../assets/js/http.js';
 
     export default {
         data () {
@@ -88,7 +89,7 @@
         },
         methods: {
             // 登录
-            loginFun() {
+            async loginFun() {
                 let self = this;
                 if(!self.user) {
                     self.$message.warning('用户名不能为空，请输入！');
@@ -98,19 +99,14 @@
                     self.$message.warning('密码不能为空，请输入！');
                     return false;
                 }
-                self.$http.post(ActionUrl.login.query.url, {
-                    username: self.user,
-                    password: self.pwd
-                }).then( (response) => {
-                    if(response.body.code === 'success') {
-                        self.$message.success('登录成功！');
-                        sessionStorage.setItem('loginAuth', response.body.message);
-                        // 跳转到工作台页面
-                        self.$router.push({ path: '/dashboard' });
-                    } else {
-                        self.$message.warning('登录失败，请输入正确的用户名和密码！');
-                    }
-                });
+                const { data } = await http.post('/login/query', { username: self.user, password: self.pwd });
+                if(data.code === 'success') {
+                    sessionStorage.setItem('loginAuth', data.message);
+                    sessionStorage.setItem('token', data.token);
+                    self.$router.push({ path: '/dashboard' });
+                } else {
+                    self.$message.warning('登录失败，请输入正确的用户名和密码！');
+                }
             },
             // 忘记密码
             forgetPwdFun() {
@@ -129,6 +125,14 @@
                     (err, values) => {
                         if (!err) {
                             self.okBtnLoading = true;
+                            // const { data } = await http.post(ActionUrl.login.register.url, { username: values.regUser, password: values.regPwd });
+                            // if(data.code === 'success') {
+                            //     self.$message.success(data.message);
+                            //     self.regeristerModel = false;
+                            //     self.okBtnLoading = false;
+                            // } else {
+                            //     self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
+                            // }
                             self.$http.post(ActionUrl.login.register.url, {
                                 username: values.regUser,
                                 password: values.regPwd

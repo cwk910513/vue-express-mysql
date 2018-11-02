@@ -59,6 +59,7 @@
 <script>
     import utility from '../assets/js/utility.js';
     import ActionUrl from '../assets/js/action.url.js';
+    import http from '../assets/js/http.js';
 
     // 表单中每一行的布局
     const formItemLayout = {
@@ -79,6 +80,13 @@
                 e.preventDefault()
                 self.form.validateFields((err, values) => {
                     if (!err) {
+                        // const { data } = await http.post(ActionUrl.login.update.url, { username: values.username, password: values.confirmPassword });
+                        // if(data.code === 'success') {
+                        //     self.$message.success('修改成功！');
+                        //     self.form.resetFields();
+                        // } else {
+                        //     self.$message.warning('修改失败，请联系管理员！');
+                        // }
                         self.$http.post(ActionUrl.login.update.url, {
                             username: values.username,
                             password: values.confirmPassword

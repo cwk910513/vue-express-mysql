@@ -8,7 +8,12 @@ import * as mutations from './mutations'
 Vue.use(Vuex);
 
 const state = {
-    currentItemKey: ''
+    currentItemKey: '',
+    httpError: {
+        hasError: false,
+        code: 'error',
+        message: '请求失败'
+    }
 };
 
 const store = new Vuex.Store({

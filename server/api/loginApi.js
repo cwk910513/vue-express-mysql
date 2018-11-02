@@ -1,9 +1,10 @@
 var models = require('../db');
 var express = require('express');
-var jwt = require('jsonwebtoken');
 var router = express.Router();
 var mysql = require('mysql');
 var $sql = require('../sqlMap');
+
+const JwtUtil = require('../jwt/jwt');
 
 // 连接数据库
 var conn = mysql.createConnection(models.mysql);
@@ -19,7 +20,7 @@ var jsonWrite = function(res, ret) {
         res.json(ret);
     }
 };
-
+ 
 // 登录
 router.post('/query', (req, res) => {
     var params = req.body;
@@ -28,9 +29,12 @@ router.post('/query', (req, res) => {
         if (err) {
             res.json({ code: 'error', message: false });
         }
+        var jwt = new JwtUtil();
+        var token = jwt.generateToken();
         res.json({ 
             code: result.length ? 'success' : 'error', 
-            message: result.length ? true : false 
+            message: result.length ? true : false,
+            token: token
         });
     })
 });

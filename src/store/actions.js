@@ -5,3 +5,7 @@
 export const setCrtItemKeyFun = ({ commit }, key) => {
     commit('setCrtItemKey', key);
 };
+
+export const setHttpErrorFun = ({ commit }, payload) => {
+    commit('setHttpError', payload)
+}

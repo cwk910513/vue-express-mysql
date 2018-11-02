@@ -12,7 +12,7 @@ var sqlMap = {
         return "update user set user.password = '"+ password +"' where user.username = '"+ username +"'";
     },
     user: {
-        get: 'select * from users',
+        get: 'select * from user',
         add: 'insert into users(id, name, sex) values (?, ?, ?)'
     }
 }

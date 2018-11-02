@@ -5,3 +5,7 @@
 export const setCrtItemKey = (state, key) => {
     state.currentItemKey = key;
 };
+
+export const setHttpError = (state, payload) => {
+    state.httpError = payload;
+};

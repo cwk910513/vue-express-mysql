@@ -4,6 +4,8 @@ var router = express.Router();
 var mysql = require('mysql');
 var $sql = require('../sqlMap');
 
+const JwtUtil = require('../jwt/jwt');
+
 // 连接数据库
 var conn = mysql.createConnection(models.mysql);
 
@@ -22,6 +24,11 @@ var jsonWrite = function(res, ret) {
 // 获取所有用户数据
 router.use('/getUsers', (req, res) => {
     var sql = $sql.user.get;
+    let token = req.headers.token;
+    let jwt = new JwtUtil(token);
+    let result = jwt.verifyToken();
+    console.log('******* 是否有token ********');
+    console.log(result);
     conn.query(sql, function(err, result) {
         if(err) {
             console.log(err);
