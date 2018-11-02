@@ -6,11 +6,11 @@ let ActionUrl = {
             type: 'post'
         },
         register: {
-            url: 'login/query',
+            url: '/api/login/query',
             type: 'post'
         },
         update: {
-            url: 'login/update',
+            url: '/api/login/update',
             type: 'post'
         }
     },
