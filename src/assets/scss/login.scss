@@ -14,10 +14,12 @@ div.login-content {
     .forget {
         float: left;
         color: $active-color;
+        cursor: pointer;
     }
     .register {
         float: right;
         color: $active-color;
+        cursor: pointer;
     }
     .login-btn {
         width: 100%;

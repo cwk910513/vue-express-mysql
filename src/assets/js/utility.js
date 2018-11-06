@@ -29,6 +29,13 @@
             return "";
         }
     },
+    // 校验用户名（数字+字母，且长度为6-10位）
+    regUser: (value) => /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$/.test(value),
+    // 校验密码（数字+字母，且长度为6-20）
+    regPwd: (value) => /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(value),
+    // 校验手机
     regPhone: (tel) => /^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(tel),
+    // 检验邮箱
+    regEmail: (email) => /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(email),
 };
 export default utility;

@@ -43,12 +43,13 @@ router.post('/query', (req, res) => {
 router.post('/register', (req, res) => {
     var params = req.body;
     var sql = $sql.register;
-    conn.query(sql, [params.username, params.password], function(err, result) {
+    conn.query(sql, [params.username, params.password, params.phone, params.email], function(err, result) {
         if(err) {
-            res.json({ code: 'error', message: '注册失败' });
+            res.json({ code: 200, status: 'error', message: '注册失败' });
         }
         res.json({
-            code: 'success',
+            code: 200,
+            status: 'success',
             message: '注册成功'
         });
     });

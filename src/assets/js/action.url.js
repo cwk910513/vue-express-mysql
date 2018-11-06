@@ -6,7 +6,7 @@ let ActionUrl = {
             type: 'post'
         },
         register: {
-            url: 'login/query',
+            url: 'login/register',
             type: 'post'
         },
         update: {
@@ -14,6 +14,12 @@ let ActionUrl = {
             type: 'post'
         }
     },
+    user: {
+        get: {
+            url: 'user/getUsers',
+            type: 'post'
+        }
+    }
 };
 
 export default ActionUrl;

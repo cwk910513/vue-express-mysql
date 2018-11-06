@@ -50,22 +50,53 @@
             <a-form :autoFormCreate="(form)=>{this.form = form}">
                 <a-form-item
                     label='用户名'
-                    :labelCol="{ span: 5 }"
-                    :wrapperCol="{ span: 16 }"
+                    :labelCol="formItemLayout.labelCol"
+                    :wrapperCol="formItemLayout.wrapperCol"
                     fieldDecoratorId="regUser"
-                    :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空' }]}"
-                    :max='6'
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空', whitespace: true }, {validator: validateUser}]}"
                 >
-                    <a-input placeholder="请输入用户名..."/>
+                    <a-input placeholder="数字+字符组成，且必须大于6位，小于10位"/>
                 </a-form-item>
                 <a-form-item
                     label='密码'
-                    :labelCol="{ span: 5 }"
-                    :wrapperCol="{ span: 16 }"
+                    :labelCol="formItemLayout.labelCol"
+                    :wrapperCol="formItemLayout.wrapperCol"
                     fieldDecoratorId="regPwd"
-                    :fieldDecoratorOptions="{rules: [{ required: true, message: '密码不能为空' }]}"
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '密码不能为空', whitespace: true}, {validator: validatePwd}]}"
                 >
-                    <a-input type='password' placeholder="请输入密码..."/>
+                    <a-input type='password' placeholder="数字+字符组成，且必须大于6位，小于20位"/>
+                </a-form-item>
+                <a-form-item
+                    label='确认密码'
+                    :labelCol="formItemLayout.labelCol"
+                    :wrapperCol="formItemLayout.wrapperCol"
+                    fieldDecoratorId="regCfmPwd"
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '确认密码不能为空', whitespace: true}, {validator: validateCfmPwd}]}"
+                >
+                    <a-input type='password' placeholder="请输入确认密码"/>
+                </a-form-item>
+                <a-form-item
+                        label='手机'
+                        :labelCol="formItemLayout.labelCol"
+                        :wrapperCol="formItemLayout.wrapperCol"
+                        fieldDecoratorId="regPhone"
+                        :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入手机号码！', whitespace: true}, {validator: validatePhone}]}"
+                >
+                    <a-input-group compact>
+                        <a-select defaultValue="86">
+                            <a-select-option value="86">+86</a-select-option>
+                        </a-select>
+                        <a-input style="width: 78%" placeholder="请输入手机号码" />
+                    </a-input-group>
+                </a-form-item>
+                <a-form-item
+                    label='邮箱'
+                    :labelCol="formItemLayout.labelCol"
+                    :wrapperCol="formItemLayout.wrapperCol"
+                    fieldDecoratorId="regEmail"
+                    :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入邮箱！', whitespace: true}, {validator: validateEmail}]}"
+                >
+                    <a-input placeholder="请输入邮箱"/>
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -73,12 +104,20 @@
 </template>
 
 <script>
+    import utility from '../../assets/js/utility.js';
     import ActionUrl from '../../assets/js/action.url.js';
     import http from '../../assets/js/http.js';
+
+    // 表单中每一行的布局
+    const formItemLayout = {
+        labelCol  : { span: 5 },
+        wrapperCol: { span: 16 }
+    };
 
     export default {
         data () {
             return {
+                formItemLayout,
                 user           : '',     // 登录用户名
                 pwd            : '',     // 登录密码
                 regUser        : '',     // 注册用户名
@@ -118,6 +157,53 @@
                 let self = this;
                 self.regeristerModel = true;
             },
+            // 校验用户名（6位置以上，必须包含字母+数字）
+            validateUser(rule, value, f) {
+                if(value !== "") {
+                    if(value !== undefined && !utility.regUser(value)) {
+                        f('请输入正确格式的用户名！');
+                    }
+                }
+                // *** 此处必须添加此方法，不然第一次提交表单的时候，无法完成校验 ***
+                f();
+            },
+            // 校验密码
+            validatePwd(rule, value, f) {
+                if(value !== "") {
+                    if(value !== undefined && !utility.regPwd(value)) {
+                        f('请输入正确格式的密码！');
+                    }
+                }
+                f();
+            },
+            // 校验确认密码
+            validateCfmPwd(rule, value, f) {
+                let self = this;
+                if(value !== "") {
+                    if(value !== undefined && self.form.getFieldValue('regPwd') !== self.form.getFieldValue('regCfmPwd')) {
+                        f('两次密码输入不一致，请重新输入密码！');
+                    }
+                }
+                f();
+            },
+            // 校验手机号码
+            validatePhone(rule, value, f) {
+                if(value !== "") {
+                    if(value !== undefined && !utility.regPhone(value)) {
+                        f('请输入正确格式的电话号码！');
+                    }
+                }
+                f();
+            },
+            // 校验邮箱
+            validateEmail(rule, value, f) {
+                if(value !== "") {
+                    if(value !== undefined && !utility.regEmail(value)) {
+                        f('请输入正确格式的邮箱！');
+                    }
+                }
+                f();
+            },
             // modal确定
             handleOk() {
                 let self = this;
@@ -125,13 +211,19 @@
                     async (err, values) => {
                         if (!err) {
                             self.okBtnLoading = true;
-                            const { data } = await http.post(ActionUrl.login.register.url, { username: values.regUser, password: values.regPwd });
-                            if(data.code === 'success') {
+                            const { data } = await http.post(ActionUrl.login.register.url, { 
+                                username: values.regUser, 
+                                password: values.regPwd,
+                                phone: values.regPhone,
+                                email: values.regEmail
+                            });
+                            if(data.status === 'success') {
                                 self.$message.success(data.message);
                                 self.regeristerModel = false;
                                 self.okBtnLoading = false;
                             } else {
                                 self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
+                                self.okBtnLoading = false;
                             }
                         }
                     },
