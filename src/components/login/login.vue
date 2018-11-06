@@ -99,7 +99,7 @@
                     self.$message.warning('密码不能为空，请输入！');
                     return false;
                 }
-                const { data } = await http.post('/login/query', { username: self.user, password: self.pwd });
+                const { data } = await http.post(ActionUrl.login.query.url, { username: self.user, password: self.pwd });
                 if(data.code === 'success') {
                     sessionStorage.setItem('loginAuth', data.message);
                     sessionStorage.setItem('token', data.token);
@@ -122,29 +122,17 @@
             handleOk() {
                 let self = this;
                 self.form.validateFields(
-                    (err, values) => {
+                    async (err, values) => {
                         if (!err) {
                             self.okBtnLoading = true;
-                            // const { data } = await http.post(ActionUrl.login.register.url, { username: values.regUser, password: values.regPwd });
-                            // if(data.code === 'success') {
-                            //     self.$message.success(data.message);
-                            //     self.regeristerModel = false;
-                            //     self.okBtnLoading = false;
-                            // } else {
-                            //     self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
-                            // }
-                            self.$http.post(ActionUrl.login.register.url, {
-                                username: values.regUser,
-                                password: values.regPwd
-                            }).then( (response) => {
-                                if(response.body.code === 'success') {
-                                    self.$message.success(response.body.message);
-                                    self.regeristerModel = false;
-                                    self.okBtnLoading = false;
-                                } else {
-                                    self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
-                                }
-                            })
+                            const { data } = await http.post(ActionUrl.login.register.url, { username: values.regUser, password: values.regPwd });
+                            if(data.code === 'success') {
+                                self.$message.success(data.message);
+                                self.regeristerModel = false;
+                                self.okBtnLoading = false;
+                            } else {
+                                self.$message.warning('注册失败，请联系管理员chuwk@xxx.com！');
+                            }
                         }
                     },
                 )

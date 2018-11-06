@@ -78,26 +78,15 @@
             submitFormFun (e) {
                 let self = this;
                 e.preventDefault()
-                self.form.validateFields((err, values) => {
+                self.form.validateFields( async (err, values) => {
                     if (!err) {
-                        // const { data } = await http.post(ActionUrl.login.update.url, { username: values.username, password: values.confirmPassword });
-                        // if(data.code === 'success') {
-                        //     self.$message.success('修改成功！');
-                        //     self.form.resetFields();
-                        // } else {
-                        //     self.$message.warning('修改失败，请联系管理员！');
-                        // }
-                        self.$http.post(ActionUrl.login.update.url, {
-                            username: values.username,
-                            password: values.confirmPassword
-                        }).then( (response) => {
-                            if(response.body.code === 'success') {
-                                self.$message.success('修改成功！');
-                                self.form.resetFields();
-                            } else {
-                                self.$message.warning('修改失败，请联系管理员！');
-                            }
-                        });
+                        const { data } = await http.post(ActionUrl.login.update.url, { username: values.username, password: values.confirmPassword });
+                        if(data.code === 'success') {
+                            self.$message.success('修改成功！');
+                            self.form.resetFields();
+                        } else {
+                            self.$message.warning('修改失败，请联系管理员！');
+                        }
                     }
                 })
             },

@@ -3,8 +3,8 @@
 </style>
 
 <template>
-    <div class="person-info-content">
-        用户管理
+    <div class="user-content">
+        
     </div>
 </template>
 
