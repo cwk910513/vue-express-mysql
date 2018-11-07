@@ -29,14 +29,30 @@ router.use('/getUsers', (req, res) => {
     let result = jwt.verifyToken();
     console.log('******* 是否有token ********');
     console.log(result);
-    conn.query(sql, function(err, result) {
-        if(err) {
-            console.log(err);
-        }
-        if(result) {
-            jsonWrite(res, result);
-        }
-    })
+    if(result === 'err') {
+        res.json({
+            code: 200,
+            status: 'error',
+            message: 'token无效，请重新登录'
+        });
+    } else {
+        conn.query(sql, function(err, result) {
+            if(err) {
+                res.json({
+                    code: 200,
+                    status: 'error',
+                    message: '获取用户数据失败'
+                });
+            }
+            if(result) {
+                res.json({
+                    code: 200,
+                    status: 'success',
+                    data: result
+                });
+            }
+        })
+    }
 });
 
 // 增加用户接口
