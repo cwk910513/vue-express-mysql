@@ -4,10 +4,6 @@
 
 <template>
     <a-menu theme="dark" :selectedKeys="[defaultSltTypes]" mode="inline">
-        <a-menu-item key="info" @click="gotoUrl('info', '个人中心')">
-            <a-icon type="user" />
-            <span>个人中心</span>
-        </a-menu-item>
         <a-menu-item key="user" @click="gotoUrl('user', '用户管理')">
             <a-icon type="desktop"/>
             <span>用户管理</span>

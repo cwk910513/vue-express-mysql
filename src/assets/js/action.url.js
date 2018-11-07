@@ -1,16 +1,12 @@
 let ActionUrl = {
     // 登录
     login: {
-        query: {
-            url: 'login/query',
+        login: {
+            url: 'login/login',
             type: 'post'
         },
         register: {
             url: 'login/register',
-            type: 'post'
-        },
-        update: {
-            url: 'login/update',
             type: 'post'
         }
     },

@@ -1,16 +1,19 @@
-var models = require('../db');
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
-var $sql = require('../sqlMap');
+let models = require('../db');
+let express = require('express');
+let router = express.Router();
+let mysql = require('mysql');
+let $sql = require('../sqlMap');
 
+// 加密模块(自带模块)
+const crypto = require("crypto");
+// 生成token模块
 const JwtUtil = require('../jwt/jwt');
 
 // 连接数据库
-var conn = mysql.createConnection(models.mysql);
+let conn = mysql.createConnection(models.mysql);
 conn.connect();
 
-var jsonWrite = function(res, ret) {
+let jsonWrite = function(res, ret) {
     if(typeof ret === 'undefined') {
         res.json({
             code: '1',
@@ -22,15 +25,18 @@ var jsonWrite = function(res, ret) {
 };
  
 // 登录
-router.post('/query', (req, res) => {
-    var params = req.body;
-    var sql = $sql.login(params.username, params.password);
+router.post('/login', (req, res) => {
+    let params = req.body;
+    let password = params.password;
+    let md5 = crypto.createHash('md5');
+    let md5Password = md5.update(password).digest('hex');
+    let sql = $sql.login(params.username, md5Password);
     conn.query(sql, function(err, result) {
         if (err) {
             res.json({ code: 'error', message: false });
         }
-        var jwt = new JwtUtil();
-        var token = jwt.generateToken();
+        let jwt = new JwtUtil();
+        let token = jwt.generateToken();
         res.json({ 
             code: result.length ? 'success' : 'error', 
             message: result.length ? true : false,
@@ -41,9 +47,12 @@ router.post('/query', (req, res) => {
 
 // 注册
 router.post('/register', (req, res) => {
-    var params = req.body;
-    var sql = $sql.register;
-    conn.query(sql, [params.username, params.password, params.phone, params.email], function(err, result) {
+    let params = req.body;
+    let sql = $sql.register;
+    let password = params.password;
+    let md5 = crypto.createHash('md5');
+    let md5Password = md5.update(password).digest('hex');
+    conn.query(sql, [params.username, md5Password, params.phone, params.email], function(err, result) {
         if(err) {
             res.json({ code: 200, status: 'error', message: '注册失败' });
         }
@@ -57,8 +66,8 @@ router.post('/register', (req, res) => {
 
 // 更新
 router.post('/update', (req, res) => {
-    var params = req.body;
-    var sql = $sql.update(params.username, params.password);
+    let params = req.body;
+    let sql = $sql.update(params.username, params.password);
     conn.query(sql, function(err, result) {
         if(err) {
             res.json({ code: 'error', message: '更新失败' });

@@ -138,7 +138,7 @@
                     self.$message.warning('密码不能为空，请输入！');
                     return false;
                 }
-                const { data } = await http.post(ActionUrl.login.query.url, { username: self.user, password: self.pwd });
+                const { data } = await http.post(ActionUrl.login.login.url, { username: self.user, password: self.pwd });
                 if(data.code === 'success') {
                     sessionStorage.setItem('loginAuth', data.message);
                     sessionStorage.setItem('token', data.token);

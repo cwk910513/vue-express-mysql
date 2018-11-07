@@ -1,5 +1,5 @@
 <style scoped lang='scss'>
-    @import '../assets/scss/personInfo.scss';
+    @import '../assets/scss/user.scss';
 </style>
 
 <template>

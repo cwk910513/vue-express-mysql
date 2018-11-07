@@ -7,8 +7,6 @@ import login from '@/components/login/login';
 import dashboard from '@/components/layout/dashboard';
 // 欢迎首页
 import home from '@/components/home';
-// 个人中心
-import personInfo from '@/components/personInfo';
 // 用户管理
 import userComponent from '@/components/user';
 
@@ -38,15 +36,6 @@ let router = new Router({
                         requireAuth: true,
                     },
                     component: home
-                },
-                {
-                    path: '/dashboard/info',
-                    name: 'info',
-                    title: '个人中心',
-                    meta: {
-                        requireAuth: true,
-                    },
-                    component: personInfo
                 },
                 {
                     path: '/dashboard/user',
